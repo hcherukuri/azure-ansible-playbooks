@@ -1,0 +1,16 @@
+#cloud-config
+# vim:syntax=yaml
+debug: True
+users:
+  - name: azureuser
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDDx6HmZylP4NLPNazvsInW8LdhswGIE0zzn0Oj4wDMS93MSqYDSUo4SEz/uthep+Inauket4Jm7j7eWTAlerRHj2IQwn/XwF+Iy2yMzhK5NywO2Qbt9VGZbc9NapQ13rnojtALTvLKIF7cri/69r11weGSwEKSagGaFrNsaz4EpzcY78uF4w2u1qkGI3XcgTCmCiP9y87P7HIX2dNmzOYNu/oYLjAd1aeNU41SGwtjTBacHr6JGOwsOgVMfLHSJZqszmIJ3S9S5jXPGJDFF/oTmxjdXOzvBoA8XUOfz0PxVYyVgnZSQIl4Qc0PpvuOfz/vsEGkzCnztp5WIqTzNq+/ hcheruku@harsha
+
+runcmd:
+ - sudo yum update -y
+ - sudo yum install -y python3-pip
+ - sudo pip3 install --upgrade pip
+ - pip3 install ansible
+ - ansible-galaxy collection install azure.azcollection
+ - pip3 install -r ~/.ansible/collections/ansible_collections/azure/azcollection/requirements-azure.txt
+ - sudo dnf install python3-netaddr -y

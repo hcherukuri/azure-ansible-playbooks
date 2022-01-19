@@ -1,0 +1,45 @@
+- name: Create Azure VM
+  hosts: localhost
+  connection: local
+  vars:
+    resourcegroup_name: ansible-middileware-rg
+    resourcegroup_location: eastus
+    admin_username: azureuser 
+    admin_password: Password12345
+    location: eastus
+    local_user: hcheruku
+  tasks:
+  - name: Create resource group
+    azure_rm_resourcegroup:
+      name: "{{ resourcegroup_name }}"
+      location: "{{ resourcegroup_location }}"
+
+  - name: Create VM
+    azure_rm_virtualmachine:
+      resource_group: "{{ resourcegroup_name }}"
+      name: "{{ item }}"
+      admin_username: "{{ admin_username }}"
+      admin_password: "{{ admin_password }}"
+      ssh_password_enabled: false
+      ssh_public_keys:
+        key_data: "{{ lookup('file', '/home/{{ local_user }}/.ssh/ansible-middleware.pub') }}"
+      vm_size: Standard_DS1_v2
+      custom_data: cloud-init.yaml
+      image:
+        offer: RHEL
+        publisher: RedHat
+        sku: 8-LVM
+        version: latest
+    loop:
+      - loadbalancer0
+      - site1-datagrid1
+      - site1-datagrid2
+      - site1-rhsso1 
+      - site1-rhsso2
+      - site1-database1
+      - site1-database2
+      - site2-datagrid1 
+      - site2-datagrid2
+      - site2-rhsso1 
+      - site2-rhsso2
+      - site2-database1
