@@ -1,0 +1,29 @@
+#Azure crossdc-demo
+# crossdc-demo
+13.90.115.214   loadbalancer0.rhssocrossdc.com loadbalancer0 ansible_connection=ssh ansible_ssh_user=azureuser ansible_ssh_private_key_file=/home/hcheruku/.ssh/id_rsa
+#Site1
+40.117.79.10    site1-datagrid1.rhssocrossdc.com site1-datagrid1 ansible_connection=ssh ansible_ssh_user=azureuser ansible_ssh_private_key_file=/home/hcheruku/.ssh/id_rsa
+20.120.38.206   site1-datagrid2.rhssocrossdc.com site1-datagrid2 ansible_connection=ssh ansible_ssh_user=azureuser ansible_ssh_private_key_file=/home/hcheruku/.ssh/id_rsa
+40.112.48.186   site1-rhsso1.rhssocrossdc.com site1-rhsso1 ansible_connection=ssh ansible_ssh_user=azureuser ansible_ssh_private_key_file=/home/hcheruku/.ssh/id_rsa
+20.127.21.144   site1-rhsso2.rhssocrossdc.com site1-rhsso2 ansible_connection=ssh ansible_ssh_user=azureuser ansible_ssh_private_key_file=/home/hcheruku/.ssh/id_rsa
+20.120.114.115  site1-database1.rhssocrossdc.com site1-database1 ansible_connection=ssh ansible_ssh_user=azureuser ansible_ssh_private_key_file=/home/hcheruku/.ssh/id_rsa
+20.120.114.38   site1-database2.rhssocrossdc.com site1-database2 ansible_connection=ssh ansible_ssh_user=azureuser ansible_ssh_private_key_file=/home/hcheruku/.ssh/id_rsa
+#Site2      
+20.121.14.148   site2-datagrid1.rhssocrossdc.com site2-datagrid1 ansible_connection=ssh ansible_ssh_user=azureuser ansible_ssh_private_key_file=/home/hcheruku/.ssh/id_rsa
+20.120.114.92   site2-datagrid2.rhssocrossdc.com site2-datagrid2 ansible_connection=ssh ansible_ssh_user=azureuser ansible_ssh_private_key_file=/home/hcheruku/.ssh/id_rsa
+20.121.14.231   site2-rhsso1.rhssocrossdc.com site2-rhsso1 ansible_connection=ssh ansible_ssh_user=azureuser ansible_ssh_private_key_file=/home/hcheruku/.ssh/id_rsa
+137.135.95.22   site2-rhsso2.rhssocrossdc.com site2-rhsso2 ansible_connection=ssh ansible_ssh_user=azureuser ansible_ssh_private_key_file=/home/hcheruku/.ssh/id_rsa
+20.120.118.243  site2-database1.rhssocrossdc.com site2-database1 ansible_connection=ssh ansible_ssh_user=azureuser ansible_ssh_private_key_file=/home/hcheruku/.ssh/id_rsa
+
+#3-trains-demo
+10.0.148.208    jbcs-0
+10.0.151.143    wfly-1
+10.0.149.129    wfly-2
+10.0.151.137    wfly-3
+10.0.150.204    keycloak-0
+10.0.149.107    pgsql-0
+10.0.151.246    tower
+
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+

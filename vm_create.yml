@@ -3,6 +3,9 @@
   connection: local
   vars:
     resourcegroup_name: ansible-middileware-rg
+    virtualnetwork_name: ansible-middileware-vn
+    subnet_name: ansible-middileware-subnet
+    securitygroup_name: ansible-middileware-sg
     resourcegroup_location: eastus
     admin_username: azureuser 
     admin_password: Password12345
@@ -14,32 +17,73 @@
       name: "{{ resourcegroup_name }}"
       location: "{{ resourcegroup_location }}"
 
+  - name: Create virtual network
+    azure_rm_virtualnetwork:
+      resource_group: "{{ resourcegroup_name }}"
+      name: "{{ virtualnetwork_name }}"
+      address_prefixes: "10.0.0.0/16"
+
+  - name: Add subnet
+    azure_rm_subnet:
+      resource_group: "{{ resourcegroup_name }}"
+      name: "{{ subnet_name }}"
+      virtual_network: "{{ virtualnetwork_name }}"
+      address_prefix: "10.0.1.0/24"
+
+  - name: Create Network Security Group that allows HTTP
+    azure_rm_securitygroup:
+      resource_group: "{{ resourcegroup_name }}"
+      name: "{{ securitygroup_name }}"
+      rules:
+        - name: HTTP
+          protocol: TCP
+          destination_port_range: 80
+          access: Allow
+          priority: 100
+          direction: Inbound
+        - name: HTTPS
+          protocol: TCP
+          destination_port_range: 443
+          access: Allow
+          priority: 110
+          direction: Inbound
+        - name: SSH
+          protocol: TCP
+          destination_port_range: 22
+          access: Allow
+          priority: 100
+          direction: Inbound
+
   - name: Create VM
     azure_rm_virtualmachine:
       resource_group: "{{ resourcegroup_name }}"
-      name: "{{ item }}"
+      name: "{{ item.name }}"
       admin_username: "{{ admin_username }}"
       admin_password: "{{ admin_password }}"
       ssh_password_enabled: false
       ssh_public_keys:
-        key_data: "{{ lookup('file', '/home/{{ local_user }}/.ssh/ansible-middleware.pub') }}"
+        - path: "/home/{{ admin_username }}/.ssh/authorized_keys"
+          key_data: "{{ lookup('file', '/home/{{ local_user }}/.ssh/ansible-middleware-core.pub') }}"
       vm_size: Standard_DS1_v2
-      custom_data: cloud-init.yaml
+      tags:
+        site: "{{ item.site }}"
+        role: "{{ item.role }}"
       image:
         offer: RHEL
         publisher: RedHat
         sku: 8-LVM
         version: latest
-    loop:
-      - loadbalancer0
-      - site1-datagrid1
-      - site1-datagrid2
-      - site1-rhsso1 
-      - site1-rhsso2
-      - site1-database1
-      - site1-database2
-      - site2-datagrid1 
-      - site2-datagrid2
-      - site2-rhsso1 
-      - site2-rhsso2
-      - site2-database1
+    with_items:
+      - { name: 'loadbalancer0', site: 'site0', role: 'loadbalancer' }
+      - { name: 'site1-datagrid1', site: 'site1', role: 'datagrid' }
+      - { name: 'site1-datagrid2', site: 'site1', role: 'datagrid' }
+      - { name: 'site2-datagrid1', site: 'site2', role: 'datagrid' }
+      - { name: 'site2-datagrid2', site: 'site2', role: 'datagrid' }
+      - { name: 'site1-rhsso1', site: 'site1', role: 'rhsso' }
+      - { name: 'site1-rhsso2', site: 'site1', role: 'rhsso' }
+      - { name: 'site2-rhsso1', site: 'site2', role: 'rhsso' }
+      - { name: 'site2-rhsso2', site: 'site2', role: 'rhsso' }
+      - { name: 'site1-database1', site: 'site1', role: 'database' }
+      - { name: 'site1-database2', site: 'site1', role: 'database' }
+      - { name: 'site2-database1', site: 'site2', role: 'database' }
+
